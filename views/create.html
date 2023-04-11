@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>그룹 생성</title>
+	</head>
+	<body>
+		<form action="/group/create" method="POST">
+			<ul>
+				<li>
+					<label>제목</label>
+					<input type="text" name="name">
+				</li>
+				<li>
+					<label>작성자</label>
+					<span>{{user.nick}}</span>
+					<input type="hidden" name="owner" value={{user.nick}}>
+				</li>
+				<li>
+					<label>모드</label>
+					<input type="text" name="type">
+				</li>
+				<li>
+					<select name="pos1">
+						<option value="flex">자유</option>
+						<option value="tank">탱커</option>
+						<option value="dealer">딜러</option>
+						<option value="healer">힐러</option>
+						<option value="non">선택안함</option>
+					</select>
+					<select name="pos2">
+						<option value="flex">자유</option>
+						<option value="tank">탱커</option>
+						<option value="dealer">딜러</option>
+						<option value="healer">힐러</option>
+						<option value="non">선택안함</option>
+					</select>
+					<select name="pos3">
+						<option value="flex">자유</option>
+						<option value="tank">탱커</option>
+						<option value="dealer">딜러</option>
+						<option value="healer">힐러</option>
+						<option value="non">선택안함</option>
+					</select>
+					<select name="pos4">
+						<option value="flex">자유</option>
+						<option value="tank">탱커</option>
+						<option value="dealer">딜러</option>
+						<option value="healer">힐러</option>
+						<option value="non">선택안함</option>
+					</select>
+					<select name="pos5">
+						<option value="flex">자유</option>
+						<option value="tank">탱커</option>
+						<option value="dealer">딜러</option>
+						<option value="healer">힐러</option>
+						<option value="non">선택안함</option>
+					</select>
+				</li>
+				<li><input type="submit" value="생성하기"></li>
+			</ul>
+		</form>
+	</body>
+</html>

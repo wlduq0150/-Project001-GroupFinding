@@ -1,0 +1,323 @@
+body {
+	/* background-color: rgb(255, 235, 186); */
+	background: url("images/body.jpg") no-repeat center center;
+	background-size: cover;
+	width: 1680px;
+	height: 1050px;
+}
+
+header {
+	height: 5rem;
+}
+
+header .user_menu {
+	display: flex;
+	flex-flow: row nowrap;
+}
+
+header li {
+	margin-left: 5px;
+}
+
+main {
+	width: 100%;
+	padding: 0 7.5rem 0 7.5rem;
+}
+
+main .main_title {
+	font-size: 6.5rem;
+	font-weight: bold;
+	color: rgb(250, 250, 255);
+}
+
+main .controller {
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: flex-end;
+}
+
+main .controller div:nth-child(1) {
+}
+
+main .controller div:nth-child(2) {
+	margin-left: 1.5rem;
+	padding-left: 1.5rem;
+	margin-right: 1.5rem;
+	padding-right: 1.5rem;
+	border-left: 1px solid rgb(208, 239, 247);
+	border-right: 1px solid rgb(208, 239, 247);
+}
+
+main .controller div:nth-child(3) {
+}
+
+main .ct_button {
+	display: inline-block;
+	font-size: 2.25rem;
+	font-weight: bold;
+	padding: 0.75rem;
+	border: none;
+	border-radius: 8px;
+	color: rgb(250, 250, 255);
+	background-color: rgba(49, 192, 255, 0.7);
+}
+
+main .ct_button:hover {
+	background-color: rgba(49, 192, 255, 1.0);
+	cursor: pointer;
+}
+
+main .search {
+	width: 18.4rem;
+	height: 4.8rem;
+	border: none;
+	border-radius: 8px;
+	background-color: rgba(230, 230, 230, 0.6);
+}
+
+main .create_button {
+	font-size: 3.3rem;
+	font-weight: bold;
+	text-align: center;
+	padding: 0 5rem 0 5rem;
+	border: none;
+	border-radius: 8px;
+	color: rgb(250, 250, 255);
+	background-color: rgba(255, 176, 54, 0.7);
+}
+
+main .create_button:hover {
+	background-color: rgba(255, 176, 54, 1.0);
+	cursor: pointer;
+}
+
+
+main .group_list_header {
+	width: 100%;
+	margin-top: 0.75rem;
+	text-align: left;
+}
+
+main .group_list_header th {
+	font-size: 1.75rem;
+	font-weight: bold;
+	padding-left: 0.75rem;
+	border: none;
+	border-radius: 4px;
+	color: rgb(250, 250, 255);
+	background-color: rgba(49, 192, 255, 0.7);
+}
+
+main .group_list_header th:nth-child(1) {
+	width: 45%;
+}
+
+main .group_list_header th:nth-child(2) {
+	width: 15%;
+}
+
+main .group_list_header th:nth-child(3) {
+	width: 11%;
+}
+
+main .group_list_header th:nth-child(4) {
+	width: 29%;
+}
+
+main .group_list {
+	width: 100%;
+}
+
+main .group {
+	width: 100%;
+	height: 3rem;
+	display: flex;
+	align-items: center;
+	margin-top: 0.125rem;
+	font-size: 1.35rem;
+	font-weight: bold;
+	border: none;
+	border-radius: 8px;
+	color: rgb(250, 250, 255);
+	background-color: rgba(92, 92, 92, 0.7);
+}
+
+main .group:hover {
+	background-color: rgba(55, 55, 55, 1);
+	cursor: pointer;
+}
+
+main .group li {
+	pointer-events: none;
+}
+
+main .group .group_description {
+	padding-left: 0.75rem;
+}
+
+main .group>li:nth-child(1) {
+	width: 45%;
+}
+
+main .group>li:nth-child(2) {
+	width: 14.6%;
+}
+
+main .group>li:nth-child(3) {
+	width: 10%;
+}
+
+main .group>li:nth-child(4) {
+	width: 30.4%;
+}
+
+main .group_position {
+	display: flex;
+	line-height: 90%;
+	flex-flow: row nowrap;
+}
+
+main .group_position li {
+	width: 20%;
+	text-align: center;
+}
+
+main .group_position img {
+	width: 2rem;
+	height: 2rem;
+}
+
+body .select_position {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 2;
+	display: none;
+	justify-content: center;
+	align-items: center;
+}
+
+body .sp {
+	width: 100%;
+	height: 35rem;
+}
+
+body .sp_title {
+	width: 100%;
+	height: 7.25rem;
+	background-color: rgb(27, 124, 204);
+	border-bottom: 4px solid rgb(247, 169, 52);
+	text-align: center;
+	vertical-align: middle;
+	font-size: 4.5rem;
+	font-weight: bold;
+	color: rgb(250, 250, 255);
+}
+
+body .sp_groupMain {
+	height: 23rem;
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: center;
+	background-color: rgb(47, 55, 77);
+}
+
+body .sp_groupTitle {
+	width: 50rem;
+	height: 20%;
+	box-sizing: border-box;
+	border-bottom: 2px solid rgba(145, 145, 145, 0.9);
+	text-align: center;
+	line-height: 320%;
+	font-size: 150%;;
+	color: rgb(250, 250, 255);
+}
+
+body .sp_positionList {
+	width: 50rem;
+	height: 80%;
+	box-sizing: border-box;
+	padding-top: 3rem;
+	padding-bottom: 3rem;
+	display: flex;
+	justify-content: flex-start;
+}
+
+body .sp_position {
+	width: 20%;
+	padding-top: 1.5rem;
+}
+
+body .sp_position ul {
+	pointer-events: none;
+}
+
+body .sp_positionList .position {
+	text-align: center;
+}
+
+body .sp_positionList .position img {
+	width: 55%;
+}
+
+body .sp_positionList .user {
+	font-size: 1.5rem;
+	font-weight: bold;
+	text-align: center;
+	color: rgb(250, 250, 255);
+}
+
+body .sp_positionList .selected {
+	
+}
+
+body .sp_positionList .pos1 {
+	border-right: 3px solid rgba(145, 145, 145, 0.9);
+}
+
+body .sp_positionList .pos3 {
+	border-left: 3px solid rgba(145, 145, 145, 0.9);
+	border-right: 3px solid rgba(145, 145, 145, 0.9);
+}
+
+body .sp_positionList .pos5 {
+	border-left: 3px solid rgba(145, 145, 145, 0.9);
+}
+
+body .sp_select {
+	height: 6rem;
+	padding: 1rem;
+	box-sizing: border-box;
+	display: flex;
+	justify-content: center;
+	align-content: center;
+	background-color: rgb(0, 0, 0);
+}
+
+body .sp_button {
+	padding: 0 1rem 0 1rem;
+	font-size: 2rem;
+	font-weight: bold;
+	border: 1px solid rgb(90, 210, 222);
+	color: rgb(90, 210, 222);
+	background-color: rgba(0, 0, 0, 0);
+	cursor: pointer;
+}
+
+body .sp_button:hover {
+	border: 1px solid rgb(49, 192, 255);
+	color: rgb(250, 250, 255);
+	background-color: rgb(49, 192, 255);
+}
+
+body .sp_leave {
+	margin-right: 1rem;
+}
+
+body .sp_continue {
+	margin-left: 1rem;
+	margin-right: 1rem;
+}
+
