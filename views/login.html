@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>로그인</title>
+		
+		<link rel="stylesheet" href="./login.css">
+		<link href="https://fonts.googleapis.com/css2?family=Rampart+One&display=swap" rel="stylesheet">
+	</head>
+	<body>
+		<section class="join_box">
+			<div class="logo">
+				<a class="logo_title" href="main.html">Finding Group</a>
+			</div>
+			<form action="/user/login" method="POST">
+				<ul>
+					<li>
+						<div class="left_side">
+							<label>이메일</label>
+						</div>
+						<div class="right_side">
+							<div class="input_div">
+								<input class="input email_input" type="text" name="email">
+								<label class="description email_description"></label>
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="left_side">
+							<label>비밀번호</label>
+						</div>
+						<div class="right_side">
+							<div class="input_div">
+								<input class="input password_input" type="text" name="password">
+								<label class="description password_description"></label>
+							</div>
+						</div>
+					</li>
+				</ul>
+				<input class="check_button submit_button" type="submit" value="로그인">
+			</form>
+			<ul class="sub_menu">
+				<li><a href="/">아이디 찾기</a>|</li>
+				<li><a href="/">비밀번호 찾기</a>|</li>
+				<li><a href="/joinPage">회원가입</a></li>
+			</ul>
+		</section>
+	</body>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+	<script>
+		document.querySelectorAll(".check_button").forEach((button) => {
+			button.addEventListener("mouseover", (e) => {
+				button.style.backgroundColor = "rgba(136, 235, 247, 0.7)"
+				button.style.boxShadow = "none";
+			});
+			button.addEventListener("mouseout", (e) => {
+				button.style.backgroundColor = "rgba(136, 235, 247, 0.4)"
+				button.style.boxShadow = "1px 1px 1px 1px rgba(110, 110, 110, 0.8)";
+			});
+		});
+	</script>
+</html>

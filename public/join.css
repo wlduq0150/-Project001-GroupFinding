@@ -1,0 +1,122 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+ul, ol, li {
+	list-style: none;
+}
+
+a {
+	color: black;
+	text-decoration: none;
+}
+
+.logo {
+	margin-top: 30px;
+}
+
+.logo_title {
+	padding: 0 1rem 0 1rem;
+	font-family: 'Rampart One', cursive;
+	font-size: 52px;
+	line-height: 80%;
+}
+
+label {
+	font-size: 22px;
+	font-weight: bold;
+}
+
+.description {
+	height: 20px;
+	font-size: 14px;
+	font-weight: bold;
+	color: rgba(252, 161, 3, 0.9);
+	text-align: left;
+}
+
+.input {
+	width: 170px;
+	background: none;
+	border: none;
+	border-bottom: solid 1px rgb(0, 0, 0);
+	outline: none;
+	font-size: 24px;
+	font-weight: bold;
+}
+
+.check_button {
+	margin-left: 15px;
+	width: 85px;
+	padding: 5px;
+	border: none;
+	border-radius: 4px;
+	box-shadow: 1px 1px 1px 1px rgba(110, 110, 110, 0.8);
+	font-size: 18px;
+	font-weight: bold;
+	color: rgba(255, 250, 250, 0.9);
+	background-color: rgba(136, 235, 247, 0.4);
+	cursor: pointer;
+}
+
+.submit_button {
+	margin-top: 30px;
+	width: 50%;
+	padding: 20px;
+	font-size: 24px;
+}
+
+body {
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.join_box {
+	width: 480px;
+	height: 640px;
+	padding: 20px;
+	box-sizing: border-box;
+	border: none;
+	border-radius: 6px;
+	box-shadow: 2px 2px 3px 3px rgba(38, 38, 38, 0.8);
+	background-image: linear-gradient(-90deg, rgba(77, 144, 232, 0.9), rgba(131, 179, 242, 0.8));
+	text-align: center;
+}
+
+li {
+	margin-top: 20px;
+	display: flex;
+	flex-flow: nowrap;
+	justify-content: flex-start;
+}
+
+li:nth-of-type(1) {
+	margin-top: 50px;
+}
+
+.left_side {
+	display: flex;
+	justify-content: flex-start;
+	width: 35%;
+}
+
+.right_side {
+	width: 65%;
+	display: flex;
+	flex-flow: row nowrap;
+}
+
+.input_div {
+	margin-top: 5px;
+	display: flex;
+	flex-direction: column;
+}
+
+.check_div {
+	
+}
+

@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>{{title}}</title>
+		<link rel="stylesheet" href="/index.css">
+		<link rel="stylesheet" href="/main.css">
+		<link rel="stylesheet" href="/footer.css">
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Rampart+One&display=swap" rel="stylesheet">
+	</head>
+	<body>
+		<header>
+			<nav class="menubar">
+				<a class="logo_title" href="main.html">Finding<br/>Group</a>
+				<div class="user_menu">
+					<span data-nick="{{user.nick}}" class="user_nick">{{user.nick}}</span>
+					<div class="user_account">
+						<div data-id=0 class="user_account_icon">
+							<svg width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" xmlns="http://www.w3.org/2000/svg" part="icon blz-icon">
+								<path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+							</svg>
+							<span>계정</span>
+							<svg width="12" height="12" xmlns="http://www.w3.org/2000/svg" focusable="false" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" role="presentation" fill="none" stroke-width="2px" viewBox="0 0 24 24" part="icon blz-icon">
+								<path d="M6 9L12 15L18 9"></path>
+							</svg>
+						</div>
+						
+						<div class="account_hidden">
+							<div class="hidden_arrow"></div>
+							<div class="user_account_hidden">
+								{% if user %}
+								<div>
+									<div class="account_button profile_button">프로필</div>
+								</div>	
+								<div>
+									<div class="account_button logout_button">로그아웃</div>
+								</div>	
+								{% else %}
+								<div>
+									<a class="account_button" href="/loginPage">로그인</a>
+								</div>
+								<div>
+									<a class="account_button" href="/joinPage">회원가입</a>
+								</div>
+								<div>
+									<ul class="account_find_info">
+										<li><a href="#">아이디 찾기</a></li>
+										<li>|</li>
+										<li><a href="#">비밀번호 찾기</a></li>
+									</ul>
+								</div>	
+								{% endif %}
+							</div>
+						</div>	
+					</div>
+				</div>
+			</nav>
+		</header>
+		<main>
+			<h1 class="main_title">그룹 찾기</h1>
+			<div class="controller">
+				<div>
+					<button class="ct_button reload">리로딩</button>
+					<button class="ct_button">필터</button>
+				</div>
+				<div>
+					<input class="search" type="text">
+				</div>
+				<div>
+					<button class="create_button">+만들기</button>
+				</div>
+			</div>
+			<table class="group_list_header">
+				<th>제목</th>
+				<th>제작자</th>
+				<th>모드</th>
+				<th>역할 현황</th>
+			</table>
+			<ul class="group_list">
+				{% for group in groups %}
+				<li>
+					<ul data-id="{{group.groupId}}" class="group">
+						<li class="group_description">{{group.name}}</li>
+						<li class="group_description">{{group.owner}}</li>
+						<li class="group_description">{{group.type}}</li>
+						<li>
+							<ul class="group_position">
+								{% set tank = "images/tank_icon.png" %}
+								{% set healer = "images/healer_icon.png" %}
+								{% set dealer = "images/dealer_icon.png" %}
+								{% set flex = "images/flex_icon.png" %}
+								{% set non = "images/non_icon.png" %}
+								{% set tank_hover = "images/tank_icon_hover.png" %}
+								{% set healer_hover = "images/healer_icon_hover.png" %}
+								{% set dealer_hover = "images/dealer_icon_hover.png" %}
+								{% set flex_hover = "images/flex_icon_hover.png" %}
+								{% for pos in group.position %}
+								<li>
+									{% if pos === "tank" and group.position_user[loop.index-1] === "none" %}
+									<img src={{tank}}>
+									{% elif pos === "tank" and group.position_user[loop.index-1] !== "none" %}
+									<img src={{tank_hover}}>
+									
+									{% elif pos === "healer" and group.position_user[loop.index-1] === "none" %}
+									<img src={{healer}}>
+									{% elif pos === "healer" and group.position_user[loop.index-1] !== "none" %}
+									<img src={{healer_hover}}>
+									
+									{% elif pos === "dealer" and group.position_user[loop.index-1] === "none" %}
+									<img src={{dealer}}>
+									{% elif pos === "dealer" and group.position_user[loop.index-1] !== "none" %}
+									<img src={{dealer_hover}}>
+									
+									{% elif pos === "flex" and group.position_user[loop.index-1] === "none" %}
+									<img src={{flex}}>
+									{% elif pos === "flex" and group.position_user[loop.index-1] !== "none" %}
+									<img src={{flex_hover}}>
+									
+									{% elif pos === "non" %}
+									<img src={{non}}>
+									
+									{% endif %}
+								</li>
+								{% endfor %}
+							</ul>
+						</li>
+					</ul>
+				</li>
+				{% endfor %}
+			</ul>
+		</main>
+		<footer>
+			<section class="chatting">
+				<div data-id=0 class="chat_icon">
+					<img src="images/chat_icon.jpeg" alt="chat_icon">
+				</div>
+				<div class="chat_list">
+					<div class="chat_exit_icon">
+						<img src="images/chat_exit_icon.png" alt="chat_exit_icon_img">
+					</div>
+					<div class="blank">
+					</div>
+				</div>
+				<div class="send_chat">
+					<label>[{{user.nick}}]:</label>
+					<input type="text" name="message" onkeypress="send(event)">
+				</div>
+			</section>
+		</footer>
+		<section class="select_position">
+			<div class="sp">
+				<div class="sp_title">
+					역할 선택
+				</div>
+				<div data-groupId=-1 data-pos=0 class="sp_groupMain">
+					<div class="sp_groupTitle">
+					</div>
+					<div class="sp_positionList">
+						<div data-id=1 data-selected=0 class="sp_position pos1">
+							<ul>
+								<li class="position">
+									<img src="">
+								</li>
+								<li class="user">
+								</li>
+								<li data-id=0 class="selected"></li>
+							</ul>
+						</div>
+						<div data-id=2 data-selected=0 class="sp_position pos2">
+							<ul>
+								<li class="position">
+									<img src="">
+								</li>
+								<li class="user"></li>
+								<li data-id=0 class="selected"></li>
+							</ul>
+						</div>
+						<div data-id=3 data-selected=0 class="sp_position pos3">
+							<ul>
+								<li class="position">
+									<img src="">
+								</li>
+								<li class="user"></li>
+								<li data-id=0 class="selected"></li>
+							</ul>
+						</div>
+						<div data-id=4 data-selected=0 class="sp_position pos4">
+							<ul>
+								<li class="position">
+									<img src="">
+								</li>
+								<li class="user"></li>
+								<li data-id=0 class="selected"></li>
+							</ul>
+						</div>
+						<div data-id=5 data-selected=0 class="sp_position pos5">
+							<ul>
+								<li class="position">
+									<img src="">
+								</li>
+								<li class="user"></li>
+								<li data-id=0 class="selected"></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="sp_select">
+					<button class="sp_button sp_leave">
+						그룹 나가기
+					</button>
+					<button class="sp_button sp_continue">
+						계속 하기
+					</button>
+				</div>
+			</div>
+		</section>
+		
+		<section class="ban_click"></section>
+		<div data-id=0 data-nick="" class="user_click_menu">
+			<li>
+				<div class="show_profile">프로필 보기</div>
+			</li>
+			<li>
+				<div class="request_friend">친구 신청</div>
+			</li>
+			<li>
+				<div class="report_user">신고 하기</div>
+			</li>
+		</div>
+	</body>
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+    <script>
+		/// function ///
+		function createGroup(group) {
+			const li = document.createElement("li");
+			const li_ul = document.createElement("ul");
+			li_ul.dataset.id = group.groupId;
+			li_ul.classList.add("group");
+			let li_ul_li = document.createElement("li");
+			li_ul_li.classList.add("group_description");
+			li_ul_li.textContent = group.name;
+			li_ul.appendChild(li_ul_li);
+			li_ul_li = document.createElement("li");
+			li_ul_li.classList.add("group_description");
+			li_ul_li.textContent = group.owner;
+			li_ul.appendChild(li_ul_li);
+			li_ul_li = document.createElement("li");
+			li_ul_li.classList.add("group_description");
+			li_ul_li.textContent = group.type;
+			li_ul.appendChild(li_ul_li);
+			li_ul_li = document.createElement("li");
+			li_ul_li.classList.add("group_description");
+			const li_ul_li_ul = document.createElement("ul");
+			li_ul_li_ul.classList.add("group_position");
+			for (var i=0; i<group.position.length; i++) {
+				const li_ul_li_ul_li = document.createElement("li");
+				let img = document.createElement("img");
+				if (group.position_user[i] == "none") {
+					img.src=`images/${group.position[i]}_icon.png`;
+				} else {
+					img.src=`images/${group.position[i]}_icon_hover.png`;
+				}
+				li_ul_li_ul_li.appendChild(img);
+				li_ul_li_ul.appendChild(li_ul_li_ul_li);
+			}
+			li_ul_li.appendChild(li_ul_li_ul);
+			li_ul.appendChild(li_ul_li);
+			li_ul.addEventListener("click", async (e) => {
+				axios.post("https://finding-group.run.goorm.site/group/join", {
+					groupId: parseInt(e.target.dataset.id),
+					chatId: chatSocket.id,
+					posId: posSocket.id,
+					create: false,
+				});
+			});
+			li.appendChild(li_ul);
+			return li;
+		}
+		
+		async function getGroupData(groupId) {
+			const groupData_json = await axios.get(`https://finding-group.run.goorm.site/group/${groupId}`);
+			const groupData = groupData_json.data;
+			return groupData;
+		}
+		
+		async function reloadGroup() {
+			const data = await axios.get("https://finding-group.run.goorm.site/group/groups");
+			const groups = data.data;
+			const groupList = document.querySelector(".group_list");
+			while (groupList.firstChild) {
+				groupList.removeChild(groupList.firstChild);
+			}
+			for (let i=0; i<groups.length; i++) {
+				const group = createGroup(groups[i]);
+				groupList.appendChild(group);
+			}
+		}
+		
+		async function showSelect(groupId) {
+			const group = await getGroupData(groupId);
+			const select_position = document.querySelector(".select_position");
+			const groupTitle = document.querySelector(".sp_groupTitle");
+			const sp_position = document.querySelectorAll(".sp_position");
+			document.querySelector(".sp_groupMain").dataset.groupId = groupId;
+			groupTitle.textContent = `${group.name} | ${group.type}`;
+			sp_position.forEach((pos) => {
+				if (group.position_user[pos.dataset.id-1] === "none") {
+					pos.querySelector("img").src = `images/${group.position[pos.dataset.id-1]}_icon.png`;
+				} else {
+					pos.querySelector("img").src = `images/${group.position[pos.dataset.id-1]}_icon_hover.png`;
+					pos.querySelector(".user").textContent = group.position_user[pos.dataset.id-1];
+					pos.dataset.selected = 1;
+				}
+			});
+			select_position.style.display = "flex";
+		}
+		
+		function hideSelect() {
+			const select_position = document.querySelector(".select_position");
+			const groupTitle = document.querySelector(".sp_groupTitle");
+			const sp_position = document.querySelectorAll(".sp_position");
+			groupTitle.textContent = "";
+			sp_position.forEach((pos) => {
+				pos.querySelector("img").src = "";
+				pos.querySelector(".user").textContent = "";
+			});
+			select_position.style.display = "none";
+		}
+		
+		async function selectPos(groupId, pos) {
+			await axios.post(`https://finding-group.run.goorm.site/group/${groupId}/sp/${pos}`);
+		}
+		
+		async function deselectPos(groupId, pos) {
+			await axios.post(`https://finding-group.run.goorm.site/group/${groupId}/dp/${pos}`);
+		}
+		
+		function showProfile(tag) {
+			const width = 480;
+			const height = 640;
+			var popX = (window.screen.width / 2) - (width / 2);
+			var popY= (window.screen.height / 2) - (height / 2);
+			const profile = window.open(`https://overwatch.blizzard.com/ko-kr/career/${tag}`, "profile",
+										`width=${width},height=${height},resizable=no,top=${popY},left=${popX}`);
+		}
+		
+		/// front script ///
+		window.addEventListener('DOMContentLoaded', function() {
+			
+		});
+		
+		document.addEventListener("keydown", async (e) => {
+			if( (e.ctrlKey == true && (e.keyCode == 78 || e.keyCode == 82)) || (e.keyCode == 116) ) {
+				e.preventDefault();
+				e.stopPropagation();
+				const data = await axios.get("https://finding-group.run.goorm.site/group/isJoin");
+				const groupId = data.data;
+				console.log(data);
+				console.log(groupId);
+				if (groupId) {
+					await axios.post(`https://finding-group.run.goorm.site/group/leave/${groupId}`);
+				}
+				location.href = "https://finding-group.run.goorm.site";
+			}
+		});
+		
+		
+		document.querySelector(".user_account_icon").addEventListener("click", (e) => {
+			const item = document.querySelector(".user_account_icon");
+			item.dataset.id ^= 1;
+			if (item.dataset.id == 1) {
+				document.querySelector(".account_hidden").style.display = "block";
+				item.style.backgroundColor = "rgba(75, 75, 75, 0.8)";
+			} else {
+				document.querySelector(".account_hidden").style.display = "none";
+				item.style.backgroundColor = "rgba(229,235,244,0)";
+			}
+		});
+		document.querySelector(".user_account_icon").addEventListener("mouseover", (e) => {
+			const item = document.querySelector(".user_account_icon");
+			item.style.backgroundColor = "rgba(75, 75, 75, 0.8)";
+		});
+		document.querySelector(".user_account_icon").addEventListener("mouseout", (e) => {
+			const item = document.querySelector(".user_account_icon");
+			if (item.dataset.id == 0) {
+				item.style.backgroundColor = "rgba(229,235,244,0)";
+			}
+		});
+		
+		document.querySelectorAll(".account_button").forEach((button) => {
+			if (button.textContent === "로그아웃") {
+				button.addEventListener("click", async (e) => {
+					const data = await axios.get("https://finding-group.run.goorm.site/group/isJoin");
+					const groupId = data.data;
+					if (groupId) {
+						await axios.post(`https://finding-group.run.goorm.site/group/leave/${groupId}`);
+					}
+					location.href = "https://finding-group.run.goorm.site/user/logout";
+				});
+			} else if (button.textContent === "프로필") {
+				button.addEventListener("click", async (e) => {
+					const nick = document.querySelector(".user_nick").dataset.nick;
+					const res = await axios.get("https://finding-group.run.goorm.site/user/tag/" + nick);
+					const tag = res.data;
+					if (tag) {
+						showProfile(tag);
+					}
+				});
+			}
+		});
+		
+		document.querySelector(".chat_icon").addEventListener("click", (e) => {
+			const item = document.querySelector(".chat_icon");
+			const exit_item = document.querySelector(".chat_exit_icon");
+			item.dataset.id = 1;
+			if (item.dataset.id == 1) {
+				document.querySelector(".chat_list").style.display = "block";
+				document.querySelector(".send_chat").style.display = "flex";
+				item.style.display = "none";
+				exit_item.style.display = "flex";
+				exit_item.dataset.id = item.dataset.id;
+			} else {
+				
+			}
+		});
+		
+		document.querySelector(".chat_exit_icon").addEventListener("click", (e) => {
+			const item = document.querySelector(".chat_icon");
+			const exit_item = document.querySelector(".chat_exit_icon");
+			item.dataset.id = 0;
+			if (item.dataset.id == 0) {
+				document.querySelector(".chat_list").style.display = "none";
+				document.querySelector(".send_chat").style.display = "none";
+				item.style.display = "block";
+				exit_item.style.display = "none";
+				item.dataset.id = exit_item.dataset.id;
+			}
+		});
+		document.querySelector(".chat_exit_icon").addEventListener("mouseover", (e) => {
+			e.target.src = "images/chat_exit_icon_hover.png";
+		});
+		document.querySelector(".chat_exit_icon").addEventListener("mouseout", (e) => {
+			e.target.src = "images/chat_exit_icon.png";
+		});
+		
+		document.querySelector(".chat_list").addEventListener("scroll", (e) => {
+			e.stopPropagation();
+		});
+		
+		document.querySelector(".ban_click").addEventListener("click", (e) => {
+			const item = document.querySelector(".user_click_menu");
+			item.dataset.id ^= 1;
+			if (item.dataset.id == 0) {
+				document.querySelector(".ban_click").style.display = "none";
+				document.querySelector(".user_click_menu").style.display = "none";
+			}
+		});
+		
+		document.querySelectorAll(".user_click_menu div").forEach((element) => {
+			element.addEventListener("mouseover", (e) => {
+				element.style.color = "rgba(255, 180, 0, 0.9)";
+			});
+			element.addEventListener("mouseout", (e) => {
+				element.style.color = "rgba(255, 250, 250, 0.9)";
+			});
+		});
+		
+		document.querySelector(".show_profile").addEventListener("click", async (e) => {
+			const nick = document.querySelector(".user_click_menu").dataset.nick;
+			const res = await axios.get("https://finding-group.run.goorm.site/user/tag/" + nick);
+			const tag = res.data;
+			if (tag) {
+				showProfile(tag);
+			}
+		});
+			
+		//그룹 만들기 버튼
+		document.querySelector(".create_button").addEventListener("click", (e) => {
+			axios.get("https://finding-group.run.goorm.site/group")
+			.then(async (data) => {
+				const res = await axios.get("https://finding-group.run.goorm.site/group/isJoin");
+				const groupId = res.data;
+				if (!groupId) {
+					location.href = data.request.responseURL;
+				} else {
+					alert("이미 그룹에 소속되어 있습니다.");
+				}
+			})
+			.catch((err) => {
+				console.error(err);
+			});
+		});
+		
+		//리로딩 버튼
+		document.querySelector(".reload").addEventListener("click", async (e) => {
+			reloadGroup();
+		});
+		
+		//그룹 선택
+		document.querySelectorAll(".group").forEach((group) => {
+			group.addEventListener("click", async (e) => {
+				await axios.post("https://finding-group.run.goorm.site/group/join", {
+					groupId: parseInt(e.target.dataset.id),
+					chatId: chatSocket.id,
+					posId: posSocket.id,
+					create: false,
+				});
+				reloadGroup();
+			});
+		});
+		
+		//역할 선택
+		document.querySelectorAll(".sp_position").forEach((pos) => {
+			pos.addEventListener("click", async (e) => {
+				const group = document.querySelector(".sp_groupMain");
+				if (parseInt(pos.dataset.selected)) {
+					deselectPos(group.dataset.groupId, e.target.dataset.id);
+				} else {
+					selectPos(group.dataset.groupId, e.target.dataset.id);
+				}
+				reloadGroup();
+			});
+		});
+		
+		//그룹 떠나기
+		document.querySelector(".sp_leave").addEventListener("click", (e) => {
+			const groupId = document.querySelector(".sp_groupMain").dataset.groupId;
+			axios.post(`https://finding-group.run.goorm.site/group/leave/${groupId}`)
+			.then(() => {
+				console.log("그룹 나가기 성공");
+				reloadGroup();
+			})
+			.catch((err) => {
+				console.error(err);
+			});
+		});
+		
+		//계속 하기
+		document.querySelector(".sp_continue").addEventListener("click", (e) => {
+			reloadGroup();
+			hideSelect();
+		});
+		
+		/// front script ///
+		
+		
+		/// chat socket ///
+		const chatSocket = io.connect("https://finding-group.run.goorm.site/chat", { path: "/socket.io" });
+		
+		chatSocket.on("message", (msg) => {
+			const userName = document.querySelector(".user_nick").textContent;
+			
+			const div = document.createElement("div");
+			div.classList.add("chat");
+			div.innerHTML = `[<span data-nick="${msg.userName}" class="chat_nick">${msg.userName}</span>]: ${msg.message}`;
+			if (msg.userName === "system") {
+				div.classList.add("system");
+				div.textContent = `${msg.message}`;
+			} else if (msg.userName === userName) {
+				div.classList.add("mine");
+			} else {
+				div.classList.add("other");
+			}
+			
+			const chatNick = div.querySelector(".chat_nick");
+			if (chatNick) {
+				chatNick.addEventListener("click", (e) => {
+					const item = document.querySelector(".user_click_menu");
+					item.dataset.nick = chatNick.dataset.nick;
+					item.dataset.id ^= 1;
+					if (item.dataset.id == 1) {
+						document.querySelector(".ban_click").style.display = "block";
+						const rect = e.target.getBoundingClientRect();
+						const top = Math.floor((rect.top + rect.bottom)/2);
+						const left = Math.floor(rect.right);
+						item.style.marginTop = top + "px";
+						item.style.marginLeft = left + "px";
+						item.style.display = "block";
+					}
+				});
+			}
+			
+			document.querySelector(".chat_list").appendChild(div);
+			const chatList = document.querySelector(".chat_list");
+			chatList.scrollTo(0, chatList.scrollHeight);
+		});
+		
+		function send(e) {
+			if (e.code === "Enter") {
+				const message = document.querySelector(".send_chat input").value;
+				if (message === "") return;
+				axios.post("https://finding-group.run.goorm.site/group/chat", {
+					message,
+				});
+				document.querySelector(".send_chat input").value = "";
+				const chatList = document.querySelector(".chat_list");
+				chatList.scrollTo(0, chatList.scrollHeight);
+			}
+		}
+		
+		/// chat socket ///
+		
+		/// position socket ///
+		const posSocket = io.connect("https://finding-group.run.goorm.site/position", { path: "/socket.io" });
+		
+		posSocket.on("selectPosition", (data) => {
+			showSelect(data.groupId);
+		});
+		
+		posSocket.on("sp", (data) => {
+			if (data.change) {
+				const position = document.querySelector(".sp_positionList").children[data.pos];
+				const img = position.querySelector("img");
+				const user = position.querySelector(".user");
+				const imgSRC = img.src;
+				img.src = imgSRC.replace(".png", "_hover.png");
+				user.textContent = data.nick;
+				position.dataset.selected = 1;
+			}
+		});
+		
+		posSocket.on("dp", (data) => {
+			if (data.change) {
+				const position = document.querySelector(".sp_positionList").children[data.pos];
+				const img = position.querySelector("img");
+				const user = position.querySelector(".user");
+				const imgSRC = img.src;
+				img.src = imgSRC.replace("_hover.png", ".png");
+				user.textContent = "";
+				position.dataset.selected = 0;
+			}
+		});
+		
+		posSocket.on("newCreate", async () => {
+			const params = new URLSearchParams(location.search);
+			const groupId = parseInt(params.get("create"));
+			if (groupId) {
+				await axios.post("https://finding-group.run.goorm.site/group/join", {
+					groupId,
+					chatId: chatSocket.id,
+					posId: posSocket.id,
+					create: true,
+				});
+			}
+		});
+		
+		posSocket.on("leave", () => {
+			hideSelect();
+		});
+		
+		/// position socket ///
+	</script>
+</html>
