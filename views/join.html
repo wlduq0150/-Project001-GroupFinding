@@ -11,7 +11,7 @@
 			<div class="logo">
 				<a class="logo_title" href="main.html">Finding Group</a>
 			</div>
-			<form action="/user/join" method="POST">
+			<form action="https://port-0-groupfinding-lhe2bli35a3qt.sel4.cloudtype.app/user/join" method="POST">
 				<ul>
 					<li>
 						<div class="left_side">
@@ -91,7 +91,7 @@
 		});
 		
 		document.querySelector(".tag_button").addEventListener("click", (e) => {
-			location.href = "/user/verifyBNET";
+			location.href = "https://port-0-groupfinding-lhe2bli35a3qt.sel4.cloudtype.app/user/verifyBNET";
 		});
 		
 		document.querySelectorAll(".check_button").forEach((button) => {
@@ -108,7 +108,7 @@
 		document.querySelector(".email_check_button").addEventListener("click", async (e) => {
 			const email = document.querySelector(".email_input").value;
 			const message = document.querySelector(".email_description");
-			const res = await axios.post("/user/isExistEmail", {
+			const res = await axios.post("https://port-0-groupfinding-lhe2bli35a3qt.sel4.cloudtype.app/user/isExistEmail", {
 				email,
 			});
 			const isExist = res.data;
@@ -124,7 +124,7 @@
 		document.querySelector(".nick_check_button").addEventListener("click", async (e) => {
 			const nick = document.querySelector(".nick_input").value;
 			const message = document.querySelector(".nick_description");
-			const res = await axios.post("/user/isExistNick", {
+			const res = await axios.post("https://port-0-groupfinding-lhe2bli35a3qt.sel4.cloudtype.app/user/isExistNick", {
 				nick,
 			});
 			const isExist = res.data;
