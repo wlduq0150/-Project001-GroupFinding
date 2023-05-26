@@ -270,7 +270,7 @@
 			li_ul_li.appendChild(li_ul_li_ul);
 			li_ul.appendChild(li_ul_li);
 			li_ul.addEventListener("click", async (e) => {
-				axios.post("https://finding-group.run.goorm.site/group/join", {
+				axios.post("/group/join", {
 					groupId: parseInt(e.target.dataset.id),
 					chatId: chatSocket.id,
 					posId: posSocket.id,
@@ -282,13 +282,13 @@
 		}
 		
 		async function getGroupData(groupId) {
-			const groupData_json = await axios.get(`https://finding-group.run.goorm.site/group/${groupId}`);
+			const groupData_json = await axios.get(`/group/${groupId}`);
 			const groupData = groupData_json.data;
 			return groupData;
 		}
 		
 		async function reloadGroup() {
-			const data = await axios.get("https://finding-group.run.goorm.site/group/groups");
+			const data = await axios.get("/group/groups");
 			const groups = data.data;
 			const groupList = document.querySelector(".group_list");
 			while (groupList.firstChild) {
@@ -332,11 +332,11 @@
 		}
 		
 		async function selectPos(groupId, pos) {
-			await axios.post(`https://finding-group.run.goorm.site/group/${groupId}/sp/${pos}`);
+			await axios.post(`/group/${groupId}/sp/${pos}`);
 		}
 		
 		async function deselectPos(groupId, pos) {
-			await axios.post(`https://finding-group.run.goorm.site/group/${groupId}/dp/${pos}`);
+			await axios.post(`/group/${groupId}/dp/${pos}`);
 		}
 		
 		function showProfile(tag) {
@@ -357,14 +357,14 @@
 			if( (e.ctrlKey == true && (e.keyCode == 78 || e.keyCode == 82)) || (e.keyCode == 116) ) {
 				e.preventDefault();
 				e.stopPropagation();
-				const data = await axios.get("https://finding-group.run.goorm.site/group/isJoin");
+				const data = await axios.get("/group/isJoin");
 				const groupId = data.data;
 				console.log(data);
 				console.log(groupId);
 				if (groupId) {
-					await axios.post(`https://finding-group.run.goorm.site/group/leave/${groupId}`);
+					await axios.post(`/group/leave/${groupId}`);
 				}
-				location.href = "https://finding-group.run.goorm.site";
+				location.href = "";
 			}
 		});
 		
@@ -394,17 +394,17 @@
 		document.querySelectorAll(".account_button").forEach((button) => {
 			if (button.textContent === "로그아웃") {
 				button.addEventListener("click", async (e) => {
-					const data = await axios.get("https://finding-group.run.goorm.site/group/isJoin");
+					const data = await axios.get("/group/isJoin");
 					const groupId = data.data;
 					if (groupId) {
-						await axios.post(`https://finding-group.run.goorm.site/group/leave/${groupId}`);
+						await axios.post(`/group/leave/${groupId}`);
 					}
-					location.href = "https://finding-group.run.goorm.site/user/logout";
+					location.href = "/user/logout";
 				});
 			} else if (button.textContent === "프로필") {
 				button.addEventListener("click", async (e) => {
 					const nick = document.querySelector(".user_nick").dataset.nick;
-					const res = await axios.get("https://finding-group.run.goorm.site/user/tag/" + nick);
+					const res = await axios.get("/user/tag/" + nick);
 					const tag = res.data;
 					if (tag) {
 						showProfile(tag);
@@ -471,7 +471,7 @@
 		
 		document.querySelector(".show_profile").addEventListener("click", async (e) => {
 			const nick = document.querySelector(".user_click_menu").dataset.nick;
-			const res = await axios.get("https://finding-group.run.goorm.site/user/tag/" + nick);
+			const res = await axios.get("/user/tag/" + nick);
 			const tag = res.data;
 			if (tag) {
 				showProfile(tag);
@@ -480,9 +480,9 @@
 			
 		//그룹 만들기 버튼
 		document.querySelector(".create_button").addEventListener("click", (e) => {
-			axios.get("https://finding-group.run.goorm.site/group")
+			axios.get("/group")
 			.then(async (data) => {
-				const res = await axios.get("https://finding-group.run.goorm.site/group/isJoin");
+				const res = await axios.get("/group/isJoin");
 				const groupId = res.data;
 				if (!groupId) {
 					location.href = data.request.responseURL;
@@ -503,7 +503,7 @@
 		//그룹 선택
 		document.querySelectorAll(".group").forEach((group) => {
 			group.addEventListener("click", async (e) => {
-				await axios.post("https://finding-group.run.goorm.site/group/join", {
+				await axios.post("/group/join", {
 					groupId: parseInt(e.target.dataset.id),
 					chatId: chatSocket.id,
 					posId: posSocket.id,
@@ -529,7 +529,7 @@
 		//그룹 떠나기
 		document.querySelector(".sp_leave").addEventListener("click", (e) => {
 			const groupId = document.querySelector(".sp_groupMain").dataset.groupId;
-			axios.post(`https://finding-group.run.goorm.site/group/leave/${groupId}`)
+			axios.post(`/group/leave/${groupId}`)
 			.then(() => {
 				console.log("그룹 나가기 성공");
 				reloadGroup();
@@ -549,7 +549,7 @@
 		
 		
 		/// chat socket ///
-		const chatSocket = io.connect("https://finding-group.run.goorm.site/chat", { path: "/socket.io" });
+		const chatSocket = io.connect("/chat", { path: "/socket.io" });
 		
 		chatSocket.on("message", (msg) => {
 			const userName = document.querySelector(".user_nick").textContent;
@@ -593,7 +593,7 @@
 			if (e.code === "Enter") {
 				const message = document.querySelector(".send_chat input").value;
 				if (message === "") return;
-				axios.post("https://finding-group.run.goorm.site/group/chat", {
+				axios.post("/group/chat", {
 					message,
 				});
 				document.querySelector(".send_chat input").value = "";
@@ -605,7 +605,7 @@
 		/// chat socket ///
 		
 		/// position socket ///
-		const posSocket = io.connect("https://finding-group.run.goorm.site/position", { path: "/socket.io" });
+		const posSocket = io.connect("/position", { path: "/socket.io" });
 		
 		posSocket.on("selectPosition", (data) => {
 			showSelect(data.groupId);
@@ -639,7 +639,7 @@
 			const params = new URLSearchParams(location.search);
 			const groupId = parseInt(params.get("create"));
 			if (groupId) {
-				await axios.post("https://finding-group.run.goorm.site/group/join", {
+				await axios.post("/group/join", {
 					groupId,
 					chatId: chatSocket.id,
 					posId: posSocket.id,

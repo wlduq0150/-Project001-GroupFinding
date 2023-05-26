@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "root",
-    "password": null,
-    "database": "finding_group",
-    "host": "127.0.0.1",
+    "username": "sql12621548",
+    "password": "1iBhQbfmGL",
+    "database": "sql12621548",
+    "host": "sql12.freemysqlhosting.net",
     "dialect": "mysql"
   },
   "test": {
