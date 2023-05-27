@@ -2,9 +2,9 @@
   "name": "finding-group",
   "version": "1.0.0",
   "description": "Find and Join group in your game!",
-  "main": "app.js",
+  "main": "web.js",
   "scripts": {
-    "start": "nodemon app"
+    "start": "nodemon web"
   },
   "author": "jiyup",
   "license": "MIT",
