@@ -1,3 +1,5 @@
+const { getUserInfo } = require("../src/userFunction");
+
 exports.isLoggedIn = (req, res, next) => {
 	if (req.isAuthenticated()) {
 		next();
@@ -14,11 +16,11 @@ exports.isNotLoggedIn = (req, res, next) => {
 	}
 }
 
-exports.isGroupIn = (req, res, next) => {
-	if (req.session.groupId) {
+exports.isGroupIn = async (req, res, next) => {
+	const info = await getUserInfo(req.session.passport.nick);
+	if (info.groupId) {
 		next();
 	} else {
-		console.log("시발 안된다고 했잖아");
-		res.redirec("/");
+		res.redirect("/");
 	}
 }
