@@ -359,12 +359,12 @@
 				e.stopPropagation();
 				const data = await axios.get("/group/isJoin");
 				const groupId = data.data;
-				console.log(data);
-				console.log(groupId);
 				if (groupId) {
 					await axios.post(`/group/leave/${groupId}`);
 				}
-				location.href = "";
+				let url = location.href;
+				url = url.slice(0, url.indexOf("?"));
+				location.href = url;
 			}
 		});
 		

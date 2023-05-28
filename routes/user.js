@@ -3,6 +3,7 @@ const cors = require("cors");
 const passport = require("passport");
 const bcrypt = require("bcrypt");
 const { isLoggedIn, isNotLoggedIn } = require("./middlewares");
+const { initUserSession, getUserInfo, setUserInfo, destroyUserSession } = require("../src/userFunction");
 const User = require("../models/user");
 
 const router = express.Router();
@@ -10,7 +11,6 @@ const router = express.Router();
 router.post("/join", isNotLoggedIn, async (req, res, next) => {
 	try {
 		const { email, password, nick, tag } = req.body;
-		console.log(tag);
 		const exUser = await User.findOne({ where: { email }});
 		if (exUser) {
 			return res.redirect("/");
@@ -52,30 +52,30 @@ router.post("/login", isNotLoggedIn, (req, res, next) => {
 			console.log(info.message);
 			return res.redirect("/");
 		}
-		req.session.groupId = null;
-		req.session.posId = null;
-		req.session.chatId = null;
-		return req.login(user, (err) => {
+		return req.login(user, async (err) => {
 			if (err) {
 				console.error(err);
 				return next(err);
 			}
 			req.session.passport.nick = user.nick;
+			await initUserSession(req.session.passport.nick);
 			return res.redirect("/");
 		});
 	})(req, res, next);
 });
 
 router.get("/logout", (req, res, next) => {
+	destroyUserSession(req.session.passport.nick);
 	req.session.destroy();
 	req.logout((err) => {
 		res.redirect("/");
 	});
 });
 
-router.get("/groupId", isLoggedIn, (req, res, next) => {
-	if (req.session.groupId) {
-		return res.status(200).send(req.session.groupId);
+router.get("/groupId", isLoggedIn, async (req, res, next) => {
+	const info = await getUserInfo(req.session.passport.nick);
+	if (info.groupId) {
+		return res.status(200).send(info.groupId);
 	}
 	return res.status(200).send(null);
 });

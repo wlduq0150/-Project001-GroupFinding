@@ -6,7 +6,7 @@ const max_group = process.env.MAX_GROUP;
 module.exports = async () => {
 	redisClient.flushAll()
 	.then(() => {
-		for (let id=0; id<process.env.MAX_GROUP; id++) {
+		for (let id=1; id<=process.env.MAX_GROUP; id++) {
 			redisClient.sAdd("IdNumbers", id.toString());
 		};
 		console.log("redis 초기화 성공");

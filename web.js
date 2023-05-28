@@ -22,9 +22,9 @@ const userRouter = require("./routes/user");
 
 const app = express();
 passportConfig();
-app.set("port", process.env.PORT || 8001);
+app.set("port", process.env.PORT || 3000);
 app.set("view engine", "html");
-nunjucks.configure("views", {
+nunjucks.configure(path.join(__dirname, "views"), {
 	express: app,
 	watch: true,
 });

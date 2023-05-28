@@ -3,6 +3,7 @@ const redisClient = require("../src/redis");
 const fs = require("fs");
 const path = require("path");
 const { isLoggedIn, isNotLoggedIn, isGroupIn } = require("./middlewares");
+const { initUserSession, getUserInfo, setUserInfo, destroyUserSession } = require("../src/userFunction");
 const { getGroup, getAllGroups, saveGroup, deleteGroup, updateGroup, randomGroupId} = require("../src/groupFunction");
 
 function getNumGroup(groupId, req) {
@@ -37,28 +38,30 @@ async function isSelectPos(groupId, nick) {
 
 const router = express.Router();
 
-router.get("/", isLoggedIn, (req, res, next) => {
-	if (req.session.groupId !== null && req.session.groupId !== undefined) {
+router.get("/", isLoggedIn, async (req, res, next) => {
+	const info = await getUserInfo(req.session.passport.nick);
+	if (info.groupId !== null && info.groupId !== undefined) {
 		return res.status(200).send("fail");
 	}
 	res.render("create");
 });
 
-router.get("/isJoin", isLoggedIn, (req, res, next) => {
-	if (req.session.groupId !== null && req.session.groupId !== undefined) {
-		return res.json(req.session.groupId);
+router.get("/isJoin", isLoggedIn, async (req, res, next) => {
+	const info = await getUserInfo(req.session.passport.nick);
+	if (info.groupId !== null && info.groupId !== undefined) {
+		return res.status(200).json(info.groupId);
 	}
 	return res.status(200).json(null);
 });
 
 router.get("/groups", async (req, res, next) => {
 	const groups = await getAllGroups();
-	return res.json(groups);
+	return res.status(200).json(groups);
 });
 
 router.get("/:groupId", isLoggedIn, async (req, res, next) => {
 	const group = await getGroup(parseInt(req.params.groupId));
-	return res.json(group);
+	return res.status(200).json(group);
 });
 
 router.post("/create", isLoggedIn, async (req, res, next) => {
@@ -83,7 +86,6 @@ router.post("/create", isLoggedIn, async (req, res, next) => {
 			position,
 			position_user,
 		};
-		console.log(newGroup);
 		await saveGroup(groupId, newGroup);
 		return res.redirect(`/?create=${groupId}`);
 	} catch (err) {
@@ -100,6 +102,7 @@ router.post("/join", isLoggedIn, async (req, res, next) => {
 		const clientPosSocket = req.app.get("io").of("position").sockets[posId];
 		const group = await getGroup(groupId);
 		const joinNum = getNumGroup(groupId, req);
+		const info = await getUserInfo(req.session.passport.nick);
 		if (!group) {
 			return res.status(400).send("fail");
 		}
@@ -110,8 +113,8 @@ router.post("/join", isLoggedIn, async (req, res, next) => {
 			}
 		}
 		//이미 그룹에 소속되어 있는지 확인
-		if (req.session.groupId) {
-			if (req.session.groupId !== groupId) {
+		if (info.groupId) {
+			if (info.groupId !== groupId) {
 				return res.status(401).send("fail");
 			}
 			clientPosSocket.emit("selectPosition", { groupId });
@@ -121,11 +124,14 @@ router.post("/join", isLoggedIn, async (req, res, next) => {
 		if (joinNum < group.max) {
 			clientChatSocket.join(groupId);
 			clientPosSocket.join(groupId);
-			req.session.groupId = groupId;
+			await setUserInfo(req.session.passport.nick, "groupId", groupId);
+			await setUserInfo(req.session.passport.nick, "chatId", chatId);
+			await setUserInfo(req.session.passport.nick, "posId", posId);
+			console.log(await getUserInfo(req.session.passport.nick));
 			req.session.passport.groupId = groupId;
-			req.session.chatId = chatId;
-			req.session.posId = posId;
-			console.log(req.session);
+			// info.groupId = groupId;
+			// info.chatId = chatId;
+			// info.posId = posId;
 			const msg = {
 				userName: 'system',
 				message: `${req.user.nick}님이 그룹에 입장하셨습니다.`,
@@ -144,16 +150,16 @@ router.post("/join", isLoggedIn, async (req, res, next) => {
 
 router.post("/leave/:groupId", isLoggedIn, async (req, res, next) => {
 	try {
+		const info = await getUserInfo(req.session.passport.nick);
 		const groupId = parseInt(req.params.groupId);
 		const group = await getGroup(groupId);
 		const position = group.position;
 		const position_user = group.position_user;
 		const chatSocket = req.app.get("io").of("chat");
 		const posSocket = req.app.get("io").of("position");
-		const clientChatSocket = chatSocket.sockets[req.session.chatId];
-		const clientPosSocket = posSocket.sockets[req.session.posId];
-		if (groupId === req.session.groupId && userInGroup(posSocket, groupId, req.session.posId) && userInGroup(chatSocket, groupId, req.session.chatId)) {
-			req.session.groupId = null;
+		const clientChatSocket = chatSocket.sockets[info.chatId];
+		const clientPosSocket = posSocket.sockets[info.posId];
+		if (groupId === info.groupId && userInGroup(posSocket, groupId, info.posId) && userInGroup(chatSocket, groupId, info.chatId)) {
 			const msg = {
 				userName: 'system',
 				message: `${req.user.nick}님이 그룹에서 퇴장하셨습니다.`,
@@ -173,6 +179,7 @@ router.post("/leave/:groupId", isLoggedIn, async (req, res, next) => {
 			}
 			clientPosSocket.emit("leave");
 			clientPosSocket.leave(groupId);
+			await initUserSession(req.session.passport.nick);
 			if (getNumGroup(groupId, req) === 0) {
 				await deleteGroup(groupId);
 			}
@@ -194,10 +201,11 @@ router.post("/suddenLeave", async (req, res, next) => {
 		if (group.position_user.includes(nick)) {
 			const groupId = group.groupId;
 			const index = group.position_user.indexOf(nick);
-			if (index > 0 && index <= 5) {
+			if (index >= 0 && index < 5) {
 				group.position_user[index] = "none";
 			}
-			
+			console.log(req.session);
+			await initUserSession(nick);
 			await updateGroup(groupId, "position_user", group.position_user);
 			if (getNumGroup(groupId, req) === 0) {
 				await deleteGroup(groupId);
@@ -211,14 +219,15 @@ router.post("/suddenLeave", async (req, res, next) => {
 
 router.post("/:groupId/sp/:pos", isLoggedIn, async (req, res, next) => {
 	try {
+		const info = await getUserInfo(req.session.passport.nick);
 		const groupId = parseInt(req.params.groupId);
 		const pos = parseInt(req.params.pos) - 1;
 		const group = await getGroup(groupId);
 		const position = group.position;
 		const position_user = group.position_user;
 		const posSocket = req.app.get("io").of("position");
-		const clientPosSocket = posSocket.sockets[req.session.posId];
-		if (position_user[pos] === "none" && position[pos] !== "non" && !(await isSelectPos(groupId, req.user.nick))[0] && userInGroup(posSocket, groupId, req.session.posId)) {
+		const clientPosSocket = posSocket.sockets[info.posId];
+		if (position_user[pos] === "none" && position[pos] !== "non" && !(await isSelectPos(groupId, req.user.nick))[0] && userInGroup(posSocket, groupId, info.posId)) {
 			position_user[pos] = req.user.nick;
 			await updateGroup(groupId, "position_user", position_user);
 			posSocket.to(groupId).emit("sp", { 
@@ -229,6 +238,7 @@ router.post("/:groupId/sp/:pos", isLoggedIn, async (req, res, next) => {
 			});
 			return res.status(200).send("success");
 		} else {
+			console.log("ㅋㅋㅋ이건실패지");
 			return res.status(200).send("fail");
 		}
 	} catch (err) {
@@ -239,14 +249,15 @@ router.post("/:groupId/sp/:pos", isLoggedIn, async (req, res, next) => {
 
 router.post("/:groupId/dp/:pos", isLoggedIn, async (req, res, next) => {
 	try {
+		const info = await getUserInfo(req.session.passport.nick);
 		const groupId = parseInt(req.params.groupId);
 		const pos = parseInt(req.params.pos) - 1;
 		const group = await getGroup(groupId);
 		const position = group.position;
 		const position_user = group.position_user;
 		const posSocket = req.app.get("io").of("position");
-		const clientPosSocket = posSocket.sockets[req.session.posId];
-		if (position_user[pos] === req.user.nick && userInGroup(posSocket, groupId, req.session.posId)) {
+		const clientPosSocket = posSocket.sockets[info.posId];
+		if (position_user[pos] === req.user.nick && userInGroup(posSocket, groupId, info.posId)) {
 			position_user[pos] = "none";
 			await updateGroup(groupId, "position_user", position_user);
 			posSocket.to(groupId).emit("dp", { 
@@ -265,9 +276,10 @@ router.post("/:groupId/dp/:pos", isLoggedIn, async (req, res, next) => {
 	}
 });
 
-router.post("/chat", isLoggedIn, isGroupIn, (req, res, next) => {
+router.post("/chat", isLoggedIn, isGroupIn, async (req, res, next) => {
 	try {
-		const { groupId } = req.session;
+		const info = await getUserInfo(req.session.passport.nick);
+		const { groupId } = info;
 		const { message } = req.body;
 		req.app.get("io").of("chat").to(groupId).emit("message", {
 			userName: req.user.nick,

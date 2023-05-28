@@ -31,4 +31,8 @@ router.get("/loginPage", (req, res, next) => {
 	res.render("login");
 });
 
+router.get("/createPage", (req, res, next) => {
+	res.render("create");
+});
+
 module.exports = router;
