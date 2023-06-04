@@ -9,6 +9,7 @@ module.exports = (server, app, sessionMiddleware) => {
 	app.set("io", io);
 	const chat = io.of("chat");
 	const position = io.of("position");
+	const audio = io.of("audio");
 	
 	io.use((socket, next) => {
 		cookieParser(process.env.COOKIE_SECRET)(socket.request, socket.request.res || {}, next);
@@ -54,5 +55,25 @@ module.exports = (server, app, sessionMiddleware) => {
 			console.log("position네임스페이스 접속해제.");
 			
 		});
-	})
+	});
+	
+	audio.on("connection", async (socket) => {
+		console.log("audio네임스페이스 접속");
+		
+		socket.on("sendoffer", (offer, groupId, nick) => {
+			socket.to(groupId).emit("getoffer", offer, nick);
+		});
+		
+		socket.on("sendanswer", (answer, groupId, nick) => {
+			socket.to(groupId).emit("getanswer", answer, nick);
+		});
+		
+		socket.on("sendice", (ice, groupId) => {
+			socket.to(groupId).emit("getice", ice);
+		});
+		
+		socket.on("disconnect", () => {
+			console.log("audio네임스페이스 접속해제");
+		});
+	});
 }

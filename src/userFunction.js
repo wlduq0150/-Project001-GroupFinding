@@ -3,6 +3,7 @@ const redisClient = require("./redis");
 async function initUserSession(sessionId) {
 	const info = {
 		groupId: null,
+		audioId: null,
 		chatId: null,
 		posId: null,
 	}

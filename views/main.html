@@ -229,10 +229,18 @@
 				<div class="report_user">신고 하기</div>
 			</li>
 		</div>
+		
+		<section class="group_voice">
+			<div class="voice my_voice {{user.nick}}">
+				<label>{{user.nick}}</label>
+				<audio class="myVoice {{user.nick}}" autoplay></audio>
+			</div>
+		</section>
 	</body>
 	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
+	<script src="/webRTC.js"></script>
     <script>
 		/// function ///
 		function createGroup(group) {
@@ -272,6 +280,7 @@
 			li_ul.addEventListener("click", async (e) => {
 				axios.post("/group/join", {
 					groupId: parseInt(e.target.dataset.id),
+					audioId: audioSocket.id,
 					chatId: chatSocket.id,
 					posId: posSocket.id,
 					create: false,
@@ -505,6 +514,7 @@
 			group.addEventListener("click", async (e) => {
 				await axios.post("/group/join", {
 					groupId: parseInt(e.target.dataset.id),
+					audioId: audioSocket.id,
 					chatId: chatSocket.id,
 					posId: posSocket.id,
 					create: false,
@@ -641,6 +651,7 @@
 			if (groupId) {
 				await axios.post("/group/join", {
 					groupId,
+					audioId: audioSocket.id,
 					chatId: chatSocket.id,
 					posId: posSocket.id,
 					create: true,

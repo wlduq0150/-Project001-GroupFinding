@@ -8,7 +8,6 @@ module.exports = () => {
 		clientID: BNET_ID,
 		clientSecret: BNET_SECRET,
 		callbackURL: "https://finding-group.run.goorm.site/user/verifyBNET/callback",
-		region: "apac",
 	}, function(accessToken, refreshToken, profile, done) {
 		return done(null, profile);
 	}));

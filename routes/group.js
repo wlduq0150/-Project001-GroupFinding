@@ -96,7 +96,8 @@ router.post("/create", isLoggedIn, async (req, res, next) => {
 
 router.post("/join", isLoggedIn, async (req, res, next) => {
 	try {
-		const { groupId, chatId, posId, create } = req.body;
+		const { groupId, audioId, chatId, posId, create } = req.body;
+		const clientAudioSocket = req.app.get("io").of("audio").sockets[audioId];
 		const chatSocket = req.app.get("io").of("chat");
 		const clientChatSocket = chatSocket.sockets[chatId];
 		const clientPosSocket = req.app.get("io").of("position").sockets[posId];
@@ -122,20 +123,18 @@ router.post("/join", isLoggedIn, async (req, res, next) => {
 		}
 		//그룹인원수 확인
 		if (joinNum < group.max) {
+			clientAudioSocket.join(groupId);
 			clientChatSocket.join(groupId);
 			clientPosSocket.join(groupId);
 			await setUserInfo(req.session.passport.nick, "groupId", groupId);
+			await setUserInfo(req.session.passport.nick, "audioId", audioId);
 			await setUserInfo(req.session.passport.nick, "chatId", chatId);
 			await setUserInfo(req.session.passport.nick, "posId", posId);
-			console.log(await getUserInfo(req.session.passport.nick));
-			req.session.passport.groupId = groupId;
-			// info.groupId = groupId;
-			// info.chatId = chatId;
-			// info.posId = posId;
 			const msg = {
 				userName: 'system',
 				message: `${req.user.nick}님이 그룹에 입장하셨습니다.`,
 			};
+			clientAudioSocket.emit("join", groupId);
 			chatSocket.to(groupId).emit("message", msg);
 			clientPosSocket.emit("selectPosition", { groupId });
 			return res.status(200).send("success");
@@ -157,8 +156,10 @@ router.post("/leave/:groupId", isLoggedIn, async (req, res, next) => {
 		const position_user = group.position_user;
 		const chatSocket = req.app.get("io").of("chat");
 		const posSocket = req.app.get("io").of("position");
+		const audioSocket = req.app.get("io").of("audio");
 		const clientChatSocket = chatSocket.sockets[info.chatId];
 		const clientPosSocket = posSocket.sockets[info.posId];
+		const clientAudioSocket = audioSocket.sockets[info.audioId];
 		if (groupId === info.groupId && userInGroup(posSocket, groupId, info.posId) && userInGroup(chatSocket, groupId, info.chatId)) {
 			const msg = {
 				userName: 'system',
@@ -179,6 +180,8 @@ router.post("/leave/:groupId", isLoggedIn, async (req, res, next) => {
 			}
 			clientPosSocket.emit("leave");
 			clientPosSocket.leave(groupId);
+			audioSocket.to(groupId).emit("leave", req.user.nick);
+			clientAudioSocket.leave(groupId);
 			await initUserSession(req.session.passport.nick);
 			if (getNumGroup(groupId, req) === 0) {
 				await deleteGroup(groupId);
@@ -195,6 +198,7 @@ router.post("/leave/:groupId", isLoggedIn, async (req, res, next) => {
 
 router.post("/suddenLeave", async (req, res, next) => {
 	const { nick } = req.body;
+	const audioSocket = req.app.get("io").of("audio");
 	const groups = await getAllGroups();
 	for (let i=0; i<groups.length; i++) {
 		const group = groups[i];
@@ -207,6 +211,7 @@ router.post("/suddenLeave", async (req, res, next) => {
 			console.log(req.session);
 			await initUserSession(nick);
 			await updateGroup(groupId, "position_user", group.position_user);
+			audioSocket.to(groupId).emit("leave", (nick));
 			if (getNumGroup(groupId, req) === 0) {
 				await deleteGroup(groupId);
 			}

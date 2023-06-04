@@ -15,7 +15,6 @@ router.post("/join", isNotLoggedIn, async (req, res, next) => {
 		if (exUser) {
 			return res.redirect("/");
 		}
-		
 		if (req.session.check) {
 			if (req.session.check.tag && tag !== req.session.check.tag) {
 				return res.redirect("/joinPage?error=배틀태그가 일치하지 않습니다.");

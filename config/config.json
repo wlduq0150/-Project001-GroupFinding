@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "sql12621548",
-    "password": "1iBhQbfmGL",
-    "database": "sql12621548",
-    "host": "sql12.freemysqlhosting.net",
+    "username": "wlduq0150",
+    "password": "hansol0160@",
+    "database": "wlduq0150",
+    "host": "groupfinding.cafe24app.com",
     "dialect": "mysql"
   },
   "test": {
