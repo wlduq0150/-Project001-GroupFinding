@@ -39,7 +39,7 @@ async function getMedia(deviceId) {
 	};
 	try {
 		myStream = await navigator.mediaDevices.getUserMedia(initConstraints);
-		myVoice.srcObject = myStream;
+		//myVoice.srcObject = myStream;
 		if (!deviceId) {
 			//await getVoiceInputs();
 		}
@@ -59,7 +59,7 @@ async function getMedia(deviceId) {
 
 async function initCall() {
 	await getMedia();
-	makeConnection();
+	await makeConnection();
 }
 
 // <div class="voice peer_voice">
@@ -83,7 +83,7 @@ async function addPeer(nick) {
 		const peerVoice = document.createElement("audio");
 		peerVoice.classList.add("peerVoice");
 		peerVoice.classList.add(nick);
-		peerVoice.autoplay = true;
+		peerVoice.autoplay = "autoplay";
 		peer.appendChild(peerVoice);
 		peer.classList.add("voice");
 		peer.classList.add("peer_voice");
@@ -99,6 +99,7 @@ function deleteVoice(nick) {
 		document.querySelectorAll(".peer_voice").forEach((peer) => {
 			peer.remove();
 		});
+		showGroupVoice();
 	} else {
 		document.querySelectorAll(".peer_voice").forEach((peer) => {
 			if (peer.classList.contains(nick)) {
@@ -134,7 +135,6 @@ audioSocket.on("join", async (id) => {
 audioSocket.on("leave", async (nick) => {
 	try {
 		deleteVoice(nick);
-		showGroupVoice();
 	} catch (err) {
 		console.log(err);
 	}
@@ -142,6 +142,7 @@ audioSocket.on("leave", async (nick) => {
 
 audioSocket.on("getoffer", async (peerOffer, nick) => {
 	try {
+		console.log("offer is", peerOffer);
 		console.log("get offer: ", groupId);
 		await addPeer(nick);
 		myPeerConnection.setRemoteDescription(peerOffer);
@@ -160,6 +161,7 @@ audioSocket.on("getice", (ice) => {
 });
 
 audioSocket.on("getanswer", async (peerAnswer, nick) => {
+	console.log("answer is", peerAnswer);
 	await addPeer(nick);
 	myPeerConnection.setRemoteDescription(peerAnswer);
 	console.log("get answer: ", groupId);
@@ -168,19 +170,37 @@ audioSocket.on("getanswer", async (peerAnswer, nick) => {
 
 // RTC 
 
-function makeConnection() {
-	myPeerConnection = new RTCPeerConnection();
+async function makeConnection() {
+	//myPeerConnection = new RTCPeerConnection();
+	const apiKey = "1f28c2089ae4ed88fbd8f8fe452a9594ceef";
+	const res = await axios.get("https://groupfinding.metered.live/api/v1/turn/credentials?apiKey=" + apiKey);
+	const configuration = res.data;
+	configuration.push({
+		urls: "stun:stun.l.google.com:19302",
+	});
+	console.log(configuration);
+	myPeerConnection = new RTCPeerConnection({
+		iceServers: configuration,
+	});
 	
 	myPeerConnection.addEventListener("icecandidate", (data) => {
+		console.log("ice is", data);
+		console.log("connection state is", data.currentTarget.connectionState);
 		console.log("send ice: ", groupId);
 		audioSocket.emit("sendice", data.candidate, groupId);
 	});
 	
-	myPeerConnection.addEventListener("addstream", (peerStream) => {
-		console.log("peerStream is ", peerStream);
-		curPeer.srcObject = peerStream.stream;
-	});
+	// myPeerConnection.addEventListener("addstream", (peerStream) => {
+	// 	console.log("peerStream is ", peerStream);
+	// 	console.log(curPeer);
+	// 	curPeer.srcObject = peerStream.stream;
+	// });
 	
+	myPeerConnection.addEventListener("track", (data) => {
+		console.log(data);
+		curPeer.srcObject = data.streams[0];
+	});
+
 	myStream
 	.getTracks()
 	.forEach((track) => { myPeerConnection.addTrack(track, myStream) });

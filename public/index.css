@@ -13,8 +13,8 @@ li, ul, ol {
 }
 
 header {
-	width: 100%;
-	padding: 0 7rem 0 7rem;
+	width: 80%;
+	padding: 0 10% 0 10%;
 	
 }
 
@@ -30,8 +30,8 @@ nav {
 .menubar {
 	position: fixed;
 	top: 1rem;
-	left: 7rem;
-	right: 7rem;
+	left: 10%;
+	right: 10%;
 	font-size: 18px;
 	font-weight: bold;
 	color: black;
